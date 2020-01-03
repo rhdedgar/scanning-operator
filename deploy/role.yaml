@@ -71,6 +71,7 @@ rules:
   resources:
   - '*'
   - watchers
+  - loggers
   verbs:
   - create
   - delete
