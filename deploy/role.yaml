@@ -70,6 +70,7 @@ rules:
   - managed.openshift.io
   resources:
   - '*'
+  - watchers
   verbs:
   - create
   - delete
