@@ -1,0 +1,7 @@
+apiVersion: managed.openshift.io/v1alpha1
+kind: Clamd
+metadata:
+  name: example-clamd
+spec:
+  # Add fields here
+  size: 3
