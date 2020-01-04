@@ -15,8 +15,7 @@ spec:
       serviceAccountName: scanning-operator
       containers:
         - name: scanning-operator
-          # Replace this with the built image name
-          image: REPLACE_IMAGE
+          image: quay.io/dedgar/scanning-operator:v0.0.1 
           command:
           - scanning-operator
           imagePullPolicy: Always

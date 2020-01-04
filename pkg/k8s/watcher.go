@@ -46,6 +46,7 @@ func WatcherDaemonSet(m *managedv1alpha1.Watcher) *appsv1.DaemonSet {
 							Privileged: &privileged,
 							RunAsUser:  &runAsUser,
 						},
+						// TODO/dedgar consider pulling env var defaults from a config pkg or CR.
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
