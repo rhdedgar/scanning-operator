@@ -85,7 +85,7 @@ func WatcherDaemonSet(m *managedv1alpha1.Watcher) *appsv1.DaemonSet {
 							Value: "",
 						}, {
 							Name:  "CLAM_SOCKET",
-							Value: "/host/var/run/clamd.scan/clamd.sock",
+							Value: "@clamd.sock",
 						}},
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{

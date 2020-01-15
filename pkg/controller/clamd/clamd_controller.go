@@ -121,5 +121,7 @@ func (r *ReconcileClamd) Reconcile(request reconcile.Request) (reconcile.Result,
 		return reconcile.Result{}, err
 	}
 
+	// DaemonSet already exists - don't requeue
+	reqLogger.Info("Skip reconcile: DaemonSet already exists", "DaemonSet.Namespace", found.Namespace, "DaemonSet.Name", found.Name)
 	return reconcile.Result{}, nil
 }
