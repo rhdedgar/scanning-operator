@@ -48,25 +48,25 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						},
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "oso-clam-server-host-filesystem",
+							Name:      "clamd-host-filesystem",
 							MountPath: "/host/var/run/clamd.scan",
 						}, {
-							Name:      "oso-clam-server-secrets",
+							Name:      "clamd-secrets",
 							MountPath: "/secrets",
 						}},
 					}},
 					Volumes: []corev1.Volume{{
-						Name: "oso-clam-server-host-filesystem",
+						Name: "clamd-host-filesystem",
 						VolumeSource: corev1.VolumeSource{
 							HostPath: &corev1.HostPathVolumeSource{
 								Path: "/host/var/run/clamd.scan",
 							},
 						},
 					}, {
-						Name: "oso-clam-server-secrets",
+						Name: "clamd-secrets",
 						VolumeSource: corev1.VolumeSource{
 							Secret: &corev1.SecretVolumeSource{
-								SecretName: "oso-clam-server-secrets",
+								SecretName: "clamd-secrets",
 							},
 						},
 					}},

@@ -40,6 +40,21 @@ func WatcherDaemonSet(m *managedv1alpha1.Watcher) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
+						Image:     "quay.io/dedgar/clam-server:latest",
+						Name:      "clamd",
+						Resources: corev1.ResourceRequirements{},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "clamd-host-filesystem",
+							MountPath: "/host/var/run/clamd.scan",
+						}, {
+							Name:      "clamd-secrets",
+							MountPath: "/secrets",
+						}},
+					}, {
+						Image:     "quay.io/dedgar/clamsig-puller:latest",
+						Name:      "clamsig-puller",
+						Resources: corev1.ResourceRequirements{},
+					}, {
 						Image: "quay.io/dedgar/pleg-watcher:latest",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
