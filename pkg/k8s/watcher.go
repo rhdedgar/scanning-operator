@@ -40,7 +40,7 @@ func WatcherDaemonSet(m *managedv1alpha1.Watcher) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clam-server:latest",
+						Image:     "quay.io/dedgar/clamd:latest",
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
