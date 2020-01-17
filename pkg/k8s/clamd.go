@@ -36,32 +36,51 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Operator: corev1.TolerationOpExists,
 						},
 					},
+					InitContainers: []corev1.Container{{
+						Image:     "quay.io/dedgar/clamsig-puller:latest",
+						Name:      "clamsig-puller",
+						Resources: corev1.ResourceRequirements{},
+						Env: []corev1.EnvVar{{
+							Name:  "INIT_CONTAINER",
+							Value: "true",
+						}},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "clam-secrets",
+							MountPath: "/secrets",
+						}, {
+							Name:      "clam-files",
+							MountPath: "/clam",
+						}},
+					}},
 					Containers: []corev1.Container{{
 						Image:     "quay.io/dedgar/clamsig-puller:latest",
 						Name:      "clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clamd-secrets",
+							Name:      "clam-secrets",
 							MountPath: "/secrets",
+						}, {
+							Name:      "clam-files",
+							MountPath: "/clam",
 						}},
 					}, {
 						Image:     "quay.io/dedgar/clamd:latest",
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clam-sock",
-							MountPath: "/clam-sock",
+							Name:      "clam-files",
+							MountPath: "/var/lib/clamav",
 						}},
 					}},
 					Volumes: []corev1.Volume{{
-						Name: "clamd-secrets",
+						Name: "clam-secrets",
 						VolumeSource: corev1.VolumeSource{
 							Secret: &corev1.SecretVolumeSource{
-								SecretName: "clamd-secrets",
+								SecretName: "clam-secrets",
 							},
 						},
 					}, {
-						Name: "clam-sock",
+						Name: "clam-files",
 						VolumeSource: corev1.VolumeSource{
 							EmptyDir: &corev1.EmptyDirVolumeSource{},
 						},
