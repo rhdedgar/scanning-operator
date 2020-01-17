@@ -9,9 +9,6 @@ import (
 
 // ClamdDaemonSet returns a new daemonset customized for clamd
 func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
-	var privileged = true
-	var runAsUser int64
-
 	ds := &appsv1.DaemonSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      m.Name,
@@ -40,34 +37,33 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image: "quay.io/dedgar/clam-server:latest",
-						Name:  "clamd",
-						SecurityContext: &corev1.SecurityContext{
-							Privileged: &privileged,
-							RunAsUser:  &runAsUser,
-						},
+						Image:     "quay.io/dedgar/clamsig-puller:latest",
+						Name:      "clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clamd-host-filesystem",
-							MountPath: "/host/var/run/clamd.scan",
-						}, {
 							Name:      "clamd-secrets",
 							MountPath: "/secrets",
 						}},
+					}, {
+						Image:     "quay.io/dedgar/clamd:latest",
+						Name:      "clamd",
+						Resources: corev1.ResourceRequirements{},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "clam-sock",
+							MountPath: "/clam-sock",
+						}},
 					}},
 					Volumes: []corev1.Volume{{
-						Name: "clamd-host-filesystem",
-						VolumeSource: corev1.VolumeSource{
-							HostPath: &corev1.HostPathVolumeSource{
-								Path: "/host/var/run/clamd.scan",
-							},
-						},
-					}, {
 						Name: "clamd-secrets",
 						VolumeSource: corev1.VolumeSource{
 							Secret: &corev1.SecretVolumeSource{
 								SecretName: "clamd-secrets",
 							},
+						},
+					}, {
+						Name: "clamd-sock",
+						VolumeSource: corev1.VolumeSource{
+							EmptyDir: &corev1.EmptyDirVolumeSource{},
 						},
 					}},
 				},

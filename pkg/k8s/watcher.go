@@ -44,9 +44,6 @@ func WatcherDaemonSet(m *managedv1alpha1.Watcher) *appsv1.DaemonSet {
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clamd-host-filesystem",
-							MountPath: "/host/var/run/clamd.scan",
-						}, {
 							Name:      "clamd-secrets",
 							MountPath: "/secrets",
 						}},
