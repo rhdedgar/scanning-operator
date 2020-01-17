@@ -61,7 +61,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							},
 						},
 					}, {
-						Name: "clamd-sock",
+						Name: "clam-sock",
 						VolumeSource: corev1.VolumeSource{
 							EmptyDir: &corev1.EmptyDirVolumeSource{},
 						},
