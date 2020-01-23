@@ -9,6 +9,9 @@ import (
 
 // ClamdDaemonSet returns a new daemonset customized for clamd
 func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
+	var privileged = true
+	var runAsUser int64
+
 	ds := &appsv1.DaemonSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      m.Name,
@@ -38,9 +41,12 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 					},
 					InitContainers: []corev1.Container{{
 						Image:     "quay.io/dedgar/clamsig-puller:latest",
-						Name:      "clamsig-puller",
+						Name:      "init-clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}, {
 							Name:  "INIT_CONTAINER",
 							Value: "true",
 						}},
@@ -56,6 +62,10 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						Image:     "quay.io/dedgar/clamsig-puller:latest",
 						Name:      "clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
+						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}},
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "clam-secrets",
 							MountPath: "/secrets",
@@ -67,9 +77,53 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						Image:     "quay.io/dedgar/clamd:latest",
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
+						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}},
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "clam-files",
 							MountPath: "/var/lib/clamav",
+						}},
+					}, {
+						Image: "quay.io/dedgar/watcher:latest",
+						Name:  "watcher",
+						SecurityContext: &corev1.SecurityContext{
+							Privileged: &privileged,
+							RunAsUser:  &runAsUser,
+						},
+						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}, {
+							Name:  "CRIO_LOG_URL",
+							Value: "http://logger.openshift-scanning-operator.svc:8080/api/crio/log",
+						}, {
+							Name:  "DOCKER_LOG_URL",
+							Value: "http://logger.openshift-scanning-operator.svc:8080/api/docker/log",
+						}, {
+							Name:  "JOURNAL_PATH",
+							Value: "/var/log/journal",
+						}, {
+							Name:  "SCAN_RESULTS_DIR",
+							Value: "",
+						}, {
+							Name:  "POST_RESULT_URL",
+							Value: "http://logger.openshift-scanning-operator.svc:8080/api/clam/scanresult",
+						}, {
+							Name:  "OUT_FILE",
+							Value: "",
+						}, {
+							Name:  "CLAM_SOCKET",
+							Value: "/clam/clam.sock",
+						}},
+						Resources: corev1.ResourceRequirements{},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "watcher-host-journal",
+							MountPath: "/var/log/journal",
+						}, {
+							Name:      "watcher-host-filesystem",
+							MountPath: "/host/",
 						}},
 					}},
 					Volumes: []corev1.Volume{{
@@ -83,6 +137,20 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						Name: "clam-files",
 						VolumeSource: corev1.VolumeSource{
 							EmptyDir: &corev1.EmptyDirVolumeSource{},
+						},
+					}, {
+						Name: "watcher-host-filesystem",
+						VolumeSource: corev1.VolumeSource{
+							HostPath: &corev1.HostPathVolumeSource{
+								Path: "/",
+							},
+						},
+					}, {
+						Name: "watcher-host-journal",
+						VolumeSource: corev1.VolumeSource{
+							HostPath: &corev1.HostPathVolumeSource{
+								Path: "/var/log/journal",
+							},
 						},
 					}},
 				},
