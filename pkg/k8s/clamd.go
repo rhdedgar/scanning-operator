@@ -123,7 +123,10 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/var/log/journal",
 						}, {
 							Name:      "watcher-host-filesystem",
-							MountPath: "/host/",
+							MountPath: "/host",
+						}, {
+							Name:      "clam-files",
+							MountPath: "/clam",
 						}},
 					}},
 					Volumes: []corev1.Volume{{
