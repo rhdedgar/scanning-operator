@@ -114,6 +114,9 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Name:  "OUT_FILE",
 							Value: "",
 						}, {
+							Name:  "CHROOT_PATH",
+							Value: "/host",
+						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/clam/clam.sock",
 						}},
