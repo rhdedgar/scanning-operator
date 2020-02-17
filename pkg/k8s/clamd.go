@@ -118,7 +118,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Value: "/host",
 						}, {
 							Name:  "CLAM_SOCKET",
-							Value: "/clam/clam.sock",
+							Value: "/clam/clamd.sock",
 						}},
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
