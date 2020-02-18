@@ -28,7 +28,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 				},
 				Spec: corev1.PodSpec{
 					NodeSelector: map[string]string{
-						"beta.kubernetes.io/os": "linux",
+						"node-role.kubernetes.io/master": "",
 					},
 					ServiceAccountName: "scanning-operator",
 					Tolerations: []corev1.Toleration{
