@@ -6,6 +6,7 @@ import (
 	managedv1alpha1 "github.com/rhdedgar/scanning-operator/pkg/apis/managed/v1alpha1"
 	"github.com/rhdedgar/scanning-operator/pkg/k8s"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -123,5 +124,34 @@ func (r *ReconcileLogger) Reconcile(request reconcile.Request) (reconcile.Result
 
 	// DaemonSet already exists - don't requeue
 	reqLogger.Info("Skip reconcile: DaemonSet already exists", "DaemonSet.Namespace", found.Namespace, "DaemonSet.Name", found.Name)
+
+	// Define a new Service object
+	service := k8s.LoggerService(instance)
+
+	// Set Logger instance as the owner and controller
+	if err := controllerutil.SetControllerReference(instance, service, r.scheme); err != nil {
+		return reconcile.Result{}, err
+	}
+
+	// Check if this DaemonSet already exists
+	svcFound := &corev1.Service{}
+
+	err = r.client.Get(context.TODO(), types.NamespacedName{Name: service.Name, Namespace: service.Namespace}, svcFound)
+	if err != nil && errors.IsNotFound(err) {
+		reqLogger.Info("Creating a new Service", "Service.Namespace", service.Namespace, "Service.Name", service.Name)
+		err = r.client.Create(context.TODO(), service)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+
+		// Service created successfully - don't requeue
+		return reconcile.Result{}, nil
+	} else if err != nil {
+		return reconcile.Result{}, err
+	}
+
+	// Service already exists - don't requeue
+	reqLogger.Info("Skip reconcile: Service already exists", "Service.Namespace", svcFound.Namespace, "Service.Name", svcFound.Name)
+
 	return reconcile.Result{}, nil
 }
