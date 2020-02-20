@@ -40,7 +40,6 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 					Containers: []corev1.Container{{
 						Image: "quay.io/dedgar/pod-logger:latest",
 						Name:  "logger",
-						// TODO/dedgar consider pulling env var defaults from a config pkg or CR.
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
@@ -81,6 +80,7 @@ func LoggerService(m *managedv1alpha1.Logger) *corev1.Service {
 			Namespace: m.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{"name": "logger"},
 			Ports: []corev1.ServicePort{{
 				Port:       80,
 				TargetPort: intstr.FromInt(8080),
