@@ -73,7 +73,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 }
 
 // LoggerService returns a new service customized for logger
-func LoggerService(m *managedv1alpha1.Logger) *corev1.Service {
+func LoggerService(m *managedv1alpha1.LoggerService) *corev1.Service {
 	svc := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      m.Name,
