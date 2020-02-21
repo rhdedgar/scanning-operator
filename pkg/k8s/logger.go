@@ -85,7 +85,7 @@ func LoggerService(m *managedv1alpha1.LoggerService) *corev1.Service {
 		},
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{
-				"name": m.Name,
+				"name": "logger",
 			},
 			Ports: []corev1.ServicePort{{
 				Port:       8080,
