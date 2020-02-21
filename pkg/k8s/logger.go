@@ -78,11 +78,17 @@ func LoggerService(m *managedv1alpha1.LoggerService) *corev1.Service {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      m.Name,
 			Namespace: m.Namespace,
+			Labels: map[string]string{
+				"name":    m.Name,
+				"k8s-app": m.Name,
+			},
 		},
 		Spec: corev1.ServiceSpec{
-			Selector: map[string]string{"name": "logger"},
+			Selector: map[string]string{
+				"name": m.Name,
+			},
 			Ports: []corev1.ServicePort{{
-				Port:       80,
+				Port:       8080,
 				TargetPort: intstr.FromInt(8080),
 				Name:       m.Name,
 			}},

@@ -1,7 +1,7 @@
 apiVersion: managed.openshift.io/v1alpha1
 kind: LoggerService
 metadata:
-  name: example-loggerservice
+  name: loggerservice
 spec:
   # Add fields here
   size: 3
