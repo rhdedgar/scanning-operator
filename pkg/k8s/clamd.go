@@ -97,10 +97,10 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Value: "false",
 						}, {
 							Name:  "CRIO_LOG_URL",
-							Value: "http://logger.openshift-scanning-operator.svc:8080/api/crio/log",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/crio/log",
 						}, {
 							Name:  "DOCKER_LOG_URL",
-							Value: "http://logger.openshift-scanning-operator.svc:8080/api/docker/log",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/docker/log",
 						}, {
 							Name:  "JOURNAL_PATH",
 							Value: "/var/log/journal",
@@ -109,7 +109,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Value: "",
 						}, {
 							Name:  "POST_RESULT_URL",
-							Value: "http://logger.openshift-scanning-operator.svc:8080/api/clam/scanresult",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/clam/scanresult",
 						}, {
 							Name:  "OUT_FILE",
 							Value: "",
