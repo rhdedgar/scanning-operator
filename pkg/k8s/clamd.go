@@ -86,6 +86,24 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
+						Image:     "quay.io/dedgar/containerinfo:latest",
+						Name:      "containerinfo",
+						Resources: corev1.ResourceRequirements{},
+						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}, {
+							Name:  "CHROOT_PATH",
+							Value: "/host",
+						}},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "clam-files",
+							MountPath: "/clam",
+						}, {
+							Name:      "host-filesystem",
+							MountPath: "/host",
+						}},
+					}, {
 						Image: "quay.io/dedgar/watcher:latest",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
@@ -114,9 +132,6 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Name:  "OUT_FILE",
 							Value: "",
 						}, {
-							Name:  "CHROOT_PATH",
-							Value: "/host",
-						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/tmp/clamd.sock",
 						}},
@@ -125,7 +140,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Name:      "watcher-host-journal",
 							MountPath: "/var/log/journal",
 						}, {
-							Name:      "watcher-host-filesystem",
+							Name:      "host-filesystem",
 							MountPath: "/host",
 						}, {
 							Name:      "clam-files",
@@ -145,7 +160,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							EmptyDir: &corev1.EmptyDirVolumeSource{},
 						},
 					}, {
-						Name: "watcher-host-filesystem",
+						Name: "host-filesystem",
 						VolumeSource: corev1.VolumeSource{
 							HostPath: &corev1.HostPathVolumeSource{
 								Path: "/",
