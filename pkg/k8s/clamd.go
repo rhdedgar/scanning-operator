@@ -86,8 +86,8 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
-						Image:     "quay.io/dedgar/containerinfo:latest",
-						Name:      "containerinfo",
+						Image:     "quay.io/dedgar/container-info:latest",
+						Name:      "info",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
