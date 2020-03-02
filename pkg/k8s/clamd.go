@@ -134,6 +134,9 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/tmp/clamd.sock",
+						}, {
+							Name:  "INFO_SOCKET",
+							Value: "@rpc.sock",
 						}},
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
