@@ -74,7 +74,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image:     "quay.io/dedgar/clamd:latest",
+						Image:     "quay.io/dedgar/clamd:v0.0.2",
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
@@ -86,7 +86,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
-						Image: "quay.io/dedgar/container-info:latest",
+						Image: "quay.io/dedgar/container-info:v0.0.4",
 						Name:  "info",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -108,7 +108,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							MountPath: "/host",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:latest",
+						Image: "quay.io/dedgar/watcher:v0.0.43",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -137,7 +137,7 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Value: "",
 						}, {
 							Name:  "CLAM_SOCKET",
-							Value: "/tmp/clamd.sock",
+							Value: "/clam/clamd.sock",
 						}, {
 							Name:  "INFO_SOCKET",
 							Value: "@rpc.sock",
