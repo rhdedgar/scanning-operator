@@ -2,5 +2,5 @@ package version
 
 var (
 	// Version is the version number that gets printed when the operator starts.
-	Version = "0.0.7"
+	Version = "v0.0.8"
 )
