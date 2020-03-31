@@ -38,7 +38,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image: "quay.io/dedgar/pod-logger:latest",
+						Image: "quay.io/dedgar/pod-logger:v0.0.5",
 						Name:  "logger",
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
@@ -46,6 +46,9 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						}, {
 							Name:  "LOG_WRITER_URL",
 							Value: "http://logger.openshift-scanning-operator.svc:8080/api/log",
+						}, {
+							Name:  "SCAN_LOG_FILE",
+							Value: "/host/var/log/openshift_managed_malware_scan.log",
 						}},
 						Ports: []corev1.ContainerPort{{
 							ContainerPort: 8080,
