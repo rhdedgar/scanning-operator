@@ -10,6 +10,9 @@ import (
 
 // LoggerDaemonSet returns a new daemonset customized for logger
 func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
+	var privileged = true
+	var runAsUser int64
+
 	ds := &appsv1.DaemonSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      m.Name,
@@ -38,8 +41,12 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image: "quay.io/dedgar/pod-logger:v0.0.5",
+						Image: "quay.io/dedgar/pod-logger:v0.0.6",
 						Name:  "logger",
+						SecurityContext: &corev1.SecurityContext{
+							Privileged: &privileged,
+							RunAsUser:  &runAsUser,
+						},
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
@@ -58,6 +65,9 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "logger-secrets",
 							MountPath: "/secrets",
+						}, {
+							Name:      "host-logs",
+							MountPath: "/host/var/log/",
 						}},
 					}},
 					Volumes: []corev1.Volume{{
@@ -65,6 +75,13 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						VolumeSource: corev1.VolumeSource{
 							Secret: &corev1.SecretVolumeSource{
 								SecretName: "logger-secrets",
+							},
+						},
+					}, {
+						Name: "host-logs",
+						VolumeSource: corev1.VolumeSource{
+							HostPath: &corev1.HostPathVolumeSource{
+								Path: "/var/log/",
 							},
 						},
 					}},
