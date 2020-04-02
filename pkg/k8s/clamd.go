@@ -124,6 +124,9 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 							Name:  "DOCKER_LOG_URL",
 							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/docker/log",
 						}, {
+							Name:  "CLAM_LOG_URL",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/clam/scanresult",
+						}, {
 							Name:  "JOURNAL_PATH",
 							Value: "/var/log/journal",
 						}, {
