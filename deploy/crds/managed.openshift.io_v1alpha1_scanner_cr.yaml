@@ -1,7 +1,7 @@
 apiVersion: managed.openshift.io/v1alpha1
-kind: Clamd
+kind: Scanner
 metadata:
-  name: clamd
+  name: scanner
 spec:
   # Add fields here
   size: 3

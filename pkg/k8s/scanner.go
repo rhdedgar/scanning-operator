@@ -7,8 +7,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ClamdDaemonSet returns a new daemonset customized for clamd
-func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
+// ScannerDaemonSet returns a new daemonset customized for scanner
+func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 	var privileged = true
 	var runAsUser int64
 
@@ -20,13 +20,13 @@ func ClamdDaemonSet(m *managedv1alpha1.Clamd) *appsv1.DaemonSet {
 		Spec: appsv1.DaemonSetSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"name": "clamd",
+					"name": "scanner",
 				},
 			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"name": "clamd",
+						"name": "scanner",
 					},
 				},
 				Spec: corev1.PodSpec{

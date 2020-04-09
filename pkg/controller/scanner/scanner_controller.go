@@ -1,4 +1,4 @@
-package clamd
+package scanner
 
 import (
 	"context"
@@ -19,14 +19,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
-var log = logf.Log.WithName("controller_clamd")
+var log = logf.Log.WithName("controller_scanner")
 
 /**
 * USER ACTION REQUIRED: This is a scaffold file intended for the user to modify with their own Controller
 * business logic.  Delete these comments after modifying this file.*
  */
 
-// Add creates a new Clamd Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new Scanner Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -34,27 +34,27 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileClamd{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileScanner{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
-	c, err := controller.New("clamd-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("scanner-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource Clamd
-	err = c.Watch(&source.Kind{Type: &managedv1alpha1.Clamd{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource Scanner
+	err = c.Watch(&source.Kind{Type: &managedv1alpha1.Scanner{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to secondary resource Pods and requeue the owner Clamd
-	err = c.Watch(&source.Kind{Type: &managedv1alpha1.Clamd{}}, &handler.EnqueueRequestForOwner{
+	// Watch for changes to secondary resource Pods and requeue the owner Scanner
+	err = c.Watch(&source.Kind{Type: &managedv1alpha1.Scanner{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &managedv1alpha1.Clamd{},
+		OwnerType:    &managedv1alpha1.Scanner{},
 	})
 	if err != nil {
 		return err
@@ -63,28 +63,28 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// blank assignment to verify that ReconcileClamd implements reconcile.Reconciler
-var _ reconcile.Reconciler = &ReconcileClamd{}
+// blank assignment to verify that ReconcileScanner implements reconcile.Reconciler
+var _ reconcile.Reconciler = &ReconcileScanner{}
 
-// ReconcileClamd reconciles a Clamd object
-type ReconcileClamd struct {
+// ReconcileScanner reconciles a Scanner object
+type ReconcileScanner struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client client.Client
 	scheme *runtime.Scheme
 }
 
-// Reconcile reads that state of the cluster for a Clamd object and makes changes based on the state read
-// and what is in the Clamd.Spec
+// Reconcile reads that state of the cluster for a Scanner object and makes changes based on the state read
+// and what is in the Scanner.Spec
 // Note:
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
-func (r *ReconcileClamd) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileScanner) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Reconciling Clamd")
+	reqLogger.Info("Reconciling Scanner")
 
-	// Fetch the Clamd instance
-	instance := &managedv1alpha1.Clamd{}
+	// Fetch the Scanner instance
+	instance := &managedv1alpha1.Scanner{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, instance)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -98,9 +98,9 @@ func (r *ReconcileClamd) Reconcile(request reconcile.Request) (reconcile.Result,
 	}
 
 	// Define a new DaemonSet object
-	daemonSet := k8s.ClamdDaemonSet(instance)
+	daemonSet := k8s.ScannerDaemonSet(instance)
 
-	// Set Clamd instance as the owner and controller
+	// Set Scanner instance as the owner and controller
 	if err := controllerutil.SetControllerReference(instance, daemonSet, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
