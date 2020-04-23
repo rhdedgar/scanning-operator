@@ -40,7 +40,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						},
 					},
 					InitContainers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:latest",
+						Image:     "quay.io/dedgar/clamsig-puller:v0.0.3",
 						Name:      "init-clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
@@ -59,7 +59,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						}},
 					}},
 					Containers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:latest",
+						Image:     "quay.io/dedgar/clamsig-puller:v0.0.2",
 						Name:      "clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
@@ -74,7 +74,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image:     "quay.io/dedgar/clamd:v0.0.2",
+						Image:     "quay.io/dedgar/clamd:v0.0.3",
 						Name:      "clamd",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
@@ -108,7 +108,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/host",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.45",
+						Image: "quay.io/dedgar/watcher:v0.0.46",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,

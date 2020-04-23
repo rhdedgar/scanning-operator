@@ -41,7 +41,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image: "quay.io/dedgar/pod-logger:v0.0.8",
+						Image: "quay.io/dedgar/pod-logger:v0.0.9",
 						Name:  "logger",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
