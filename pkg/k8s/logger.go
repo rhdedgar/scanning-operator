@@ -41,7 +41,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						},
 					},
 					Containers: []corev1.Container{{
-						Image: "quay.io/dedgar/pod-logger:v0.0.9",
+						Image: "quay.io/dedgar/pod-logger:v0.0.10",
 						Name:  "logger",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -56,6 +56,9 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 						}, {
 							Name:  "SCAN_LOG_FILE",
 							Value: "/host/var/log/openshift_managed_malware_scan.log",
+						}, {
+							Name:  "POD_LOG_FILE",
+							Value: "/host/var/log/openshift_managed_pod_creation.log",
 						}},
 						Ports: []corev1.ContainerPort{{
 							ContainerPort: 8080,
