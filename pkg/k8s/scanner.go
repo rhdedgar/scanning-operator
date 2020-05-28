@@ -40,7 +40,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						},
 					},
 					InitContainers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:v0.0.3",
+						Image:     "quay.io/dedgar/clamsig-puller:v0.0.4",
 						Name:      "init-clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
@@ -59,7 +59,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						}},
 					}},
 					Containers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:v0.0.2",
+						Image:     "quay.io/dedgar/clamsig-puller:v0.0.4",
 						Name:      "clamsig-puller",
 						Resources: corev1.ResourceRequirements{},
 						Env: []corev1.EnvVar{{
