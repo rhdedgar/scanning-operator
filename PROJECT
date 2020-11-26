@@ -1,0 +1,17 @@
+domain: openshift.io
+layout: go.kubebuilder.io/v2
+projectName: scanning-operator
+repo: github.com/rhdedgar/scanning-operator
+resources:
+- group: managed
+  kind: Scanner
+  version: v1alpha1
+- group: managed
+  kind: Logger
+  version: v1alpha1
+- group: managed
+  kind: LoggerService
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}
