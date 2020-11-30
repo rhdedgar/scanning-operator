@@ -1,0 +1,24 @@
+# permissions for end users to edit loggerservices.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: loggerservice-editor-role
+rules:
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - loggerservices
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - loggerservices/status
+  verbs:
+  - get
