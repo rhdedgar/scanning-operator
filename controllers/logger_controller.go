@@ -40,8 +40,8 @@ type LoggerReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=loggers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=loggers/status,verbs=get;update;patch
 
 func (r *LoggerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
