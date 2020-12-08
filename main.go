@@ -61,6 +61,7 @@ func main() {
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
 		LeaderElectionID:   "a9d9b96c.openshift.io",
+		Namespace:          "openshift-scanning-operator",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
