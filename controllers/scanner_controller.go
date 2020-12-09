@@ -40,8 +40,8 @@ type ScannerReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=scanners,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=scanners/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=scanners,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=scanners/status,verbs=get;update;patch
 
 func (r *ScannerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
