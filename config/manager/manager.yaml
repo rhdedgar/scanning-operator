@@ -5,6 +5,11 @@ metadata:
     control-plane: scanning-operator
   name: openshift-scanning-operator
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: scanning-operator
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,6 +27,7 @@ spec:
       labels:
         control-plane: scanning-operator
     spec:
+      serviceAccountName: scanning-operator
       containers:
       - command:
         - /manager
