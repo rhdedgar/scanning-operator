@@ -6,7 +6,7 @@ metadata:
   labels:
     control-plane: scanning-operator
   name: controller-manager-metrics-monitor
-  namespace: system
+  namespace: openshift-scanning-operator
 spec:
   endpoints:
     - path: /metrics

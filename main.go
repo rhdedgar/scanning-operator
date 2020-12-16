@@ -33,8 +33,9 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	scheme            = runtime.NewScheme()
+	setupLog          = ctrl.Log.WithName("setup")
+	operatorNamespace = "openshift-scanning-operator"
 )
 
 func init() {
@@ -43,6 +44,8 @@ func init() {
 	utilruntime.Must(managedv1alpha1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
+
+// +kubebuilder:rbac:groups="",namespace=openshift-scanning-operator,resources=configmaps,verbs=get;create;delete;list;update
 
 func main() {
 	var metricsAddr string
@@ -56,12 +59,13 @@ func main() {
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:             scheme,
-		MetricsBindAddress: metricsAddr,
-		Port:               9443,
-		LeaderElection:     enableLeaderElection,
-		LeaderElectionID:   "a9d9b96c.openshift.io",
-		Namespace:          "openshift-scanning-operator",
+		Scheme:                  scheme,
+		MetricsBindAddress:      metricsAddr,
+		Port:                    9443,
+		LeaderElection:          enableLeaderElection,
+		LeaderElectionID:        "a9d9b96c.openshift.io",
+		LeaderElectionNamespace: operatorNamespace,
+		Namespace:               operatorNamespace,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

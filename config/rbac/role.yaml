@@ -10,21 +10,13 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - events
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resources:
   - configmaps
   verbs:
   - create
   - delete
   - get
   - list
-  - patch
   - update
-  - watch
 - apiGroups:
   - managed.openshift.io
   resources:
