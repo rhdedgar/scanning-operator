@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
+  name: scanning-operator
   namespace: openshift-scanning-operator
 spec:
   template:

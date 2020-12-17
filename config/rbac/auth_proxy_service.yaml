@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     control-plane: scanning-operator
-  name: controller-manager-metrics-service
+  name: scanning-operator-metrics-service
   namespace: openshift-scanning-operator
 spec:
   ports:

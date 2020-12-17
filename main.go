@@ -45,7 +45,8 @@ func init() {
 	// +kubebuilder:scaffold:scheme
 }
 
-// +kubebuilder:rbac:groups="",namespace=openshift-scanning-operator,resources=configmaps,verbs=get;create;delete;list;update
+// +kubebuilder:rbac:groups="",namespace=openshift-scanning-operator,resources=configmaps;services,verbs=get;create;delete;list;update
+// +kubebuilder:rbac:groups="apps",namespace=openshift-scanning-operator,resources=daemonsets,verbs=get;create;delete;list;update
 
 func main() {
 	var metricsAddr string

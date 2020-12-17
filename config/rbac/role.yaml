@@ -11,6 +11,17 @@ rules:
   - ""
   resources:
   - configmaps
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
   verbs:
   - create
   - delete

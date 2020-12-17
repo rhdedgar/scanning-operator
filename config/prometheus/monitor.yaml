@@ -5,7 +5,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     control-plane: scanning-operator
-  name: controller-manager-metrics-monitor
+  name: scanning-operator-metrics-monitor
   namespace: openshift-scanning-operator
 spec:
   endpoints:
