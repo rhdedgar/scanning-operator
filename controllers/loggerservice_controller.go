@@ -1,5 +1,5 @@
 /*
-
+Copyright 2020 Doug Edgar.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,11 +40,20 @@ type LoggerServiceReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=loggerservices,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=managed.openshift.io,namespace=openshift-scanning-operator,resources=loggerservices/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices/finalizers,verbs=update
 
-func (r *LoggerServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
+// Reconcile is part of the main kubernetes reconciliation loop which aims to
+// move the current state of the cluster closer to the desired state.
+// TODO(user): Modify the Reconcile function to compare the state specified by
+// the LoggerService object against the actual cluster state, and then
+// perform operations to make the cluster state reflect the state specified by
+// the user.
+//
+// For more details, check Reconcile and its Result here:
+// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.7.0/pkg/reconcile
+func (r *LoggerServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := r.Log.WithValues("loggerservice", req.NamespacedName)
 	reqLogger.Info("Reconciling LoggerService")
 
@@ -89,9 +98,11 @@ func (r *LoggerServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, erro
 
 	// Service already exists - don't requeue
 	reqLogger.Info("Skip reconcile: Service already exists", "Service.Namespace", svcFound.Namespace, "Service.Name", svcFound.Name)
+
 	return ctrl.Result{}, nil
 }
 
+// SetupWithManager sets up the controller with the Manager.
 func (r *LoggerServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&managedv1alpha1.LoggerService{}).

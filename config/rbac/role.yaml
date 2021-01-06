@@ -1,33 +1,17 @@
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: scanning-operator-role
-  namespace: openshift-scanning-operator
+  name: manager-role
 rules:
 - apiGroups:
-  - ""
+  - '*'
   resources:
-  - configmaps
-  - services
+  - '*'
   verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
-- apiGroups:
-  - apps
-  resources:
-  - daemonsets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - update
+  - '*'
 - apiGroups:
   - managed.openshift.io
   resources:
@@ -40,6 +24,12 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - loggers/finalizers
+  verbs:
+  - update
 - apiGroups:
   - managed.openshift.io
   resources:
@@ -63,6 +53,12 @@ rules:
 - apiGroups:
   - managed.openshift.io
   resources:
+  - loggerservices/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - managed.openshift.io
+  resources:
   - loggerservices/status
   verbs:
   - get
@@ -80,6 +76,12 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - managed.openshift.io
+  resources:
+  - scanners/finalizers
+  verbs:
+  - update
 - apiGroups:
   - managed.openshift.io
   resources:

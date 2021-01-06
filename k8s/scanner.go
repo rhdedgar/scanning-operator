@@ -33,7 +33,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 					NodeSelector: map[string]string{
 						"beta.kubernetes.io/os": "linux",
 					},
-					ServiceAccountName: "scanning-operator",
+					// ServiceAccountName: "openshift-scanning-operator",
 					Tolerations: []corev1.Toleration{
 						{
 							Operator: corev1.TolerationOpExists,

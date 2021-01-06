@@ -34,7 +34,7 @@ func LoggerDaemonSet(m *managedv1alpha1.Logger) *appsv1.DaemonSet {
 					NodeSelector: map[string]string{
 						"node-role.kubernetes.io/master": "",
 					},
-					ServiceAccountName: "scanning-operator",
+					// ServiceAccountName: "openshift-scanning-operator",
 					Tolerations: []corev1.Toleration{
 						{
 							Operator: corev1.TolerationOpExists,

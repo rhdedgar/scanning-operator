@@ -1,5 +1,5 @@
 /*
-
+Copyright 2020 Doug Edgar.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,15 @@ import (
 	"flag"
 	"os"
 
+	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
+	// to ensure that exec-entrypoint and run can make use of them.
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	managedv1alpha1 "github.com/rhdedgar/scanning-operator/api/v1alpha1"
@@ -33,9 +37,8 @@ import (
 )
 
 var (
-	scheme            = runtime.NewScheme()
-	setupLog          = ctrl.Log.WithName("setup")
-	operatorNamespace = "openshift-scanning-operator"
+	scheme   = runtime.NewScheme()
+	setupLog = ctrl.Log.WithName("setup")
 )
 
 func init() {
@@ -45,40 +48,46 @@ func init() {
 	// +kubebuilder:scaffold:scheme
 }
 
-// +kubebuilder:rbac:groups="",namespace=openshift-scanning-operator,resources=configmaps;services,verbs=get;create;delete;list;update
-// +kubebuilder:rbac:groups="apps",namespace=openshift-scanning-operator,resources=daemonsets,verbs=get;create;delete;list;update
+// +kubebuilder:rbac:groups="*",resources=*,verbs=*
 
+// TODO: trim down rbac controls to only those necessary.
+// Migrate parts to each controller as needed.
 func main() {
 	var metricsAddr string
 	var enableLeaderElection bool
-	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
-	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
+	var probeAddr string
+	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
+	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
+	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
+	opts := zap.Options{
+		Development: true,
+	}
+	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
 
-	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
+	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:                  scheme,
-		MetricsBindAddress:      metricsAddr,
-		Port:                    9443,
-		LeaderElection:          enableLeaderElection,
-		LeaderElectionID:        "a9d9b96c.openshift.io",
-		LeaderElectionNamespace: operatorNamespace,
-		Namespace:               operatorNamespace,
+		Scheme:                 scheme,
+		MetricsBindAddress:     metricsAddr,
+		Port:                   9443,
+		HealthProbeBindAddress: probeAddr,
+		LeaderElection:         enableLeaderElection,
+		LeaderElectionID:       "a9d9b96c.openshift.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
-	if err = (&controllers.ScannerReconciler{
+	if err = (&controllers.LoggerServiceReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("Scanner"),
+		Log:    ctrl.Log.WithName("controllers").WithName("LoggerService"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Scanner")
+		setupLog.Error(err, "unable to create controller", "controller", "LoggerService")
 		os.Exit(1)
 	}
 	if err = (&controllers.LoggerReconciler{
@@ -89,15 +98,24 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Logger")
 		os.Exit(1)
 	}
-	if err = (&controllers.LoggerServiceReconciler{
+	if err = (&controllers.ScannerReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("LoggerService"),
+		Log:    ctrl.Log.WithName("controllers").WithName("Scanner"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "LoggerService")
+		setupLog.Error(err, "unable to create controller", "controller", "Scanner")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
+
+	if err := mgr.AddHealthzCheck("health", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up health check")
+		os.Exit(1)
+	}
+	if err := mgr.AddReadyzCheck("check", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up ready check")
+		os.Exit(1)
+	}
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {

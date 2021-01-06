@@ -8,5 +8,5 @@ roleRef:
   name: leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: scanning-operator 
-  namespace: openshift-scanning-operator
+  name: default
+  namespace: system

@@ -2,40 +2,47 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: scanning-operator
-  name: openshift-scanning-operator
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: scanning-operator
+    control-plane: controller-manager
+  name: system
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scanning-operator
-  namespace: openshift-scanning-operator
+  name: controller-manager
+  namespace: system
   labels:
-    control-plane: scanning-operator
+    control-plane: controller-manager
 spec:
   selector:
     matchLabels:
-      control-plane: scanning-operator
+      control-plane: controller-manager
   replicas: 1
   template:
     metadata:
       labels:
-        control-plane: scanning-operator
+        control-plane: controller-manager
     spec:
-      serviceAccountName: scanning-operator
       containers:
       - command:
         - /manager
         args:
-        - --enable-leader-election
-        image: quay.io/dedgar/scanning-operator:v0.0.21
-        imagePullPolicy: Always
-        name: scanning-operator
+        - --leader-elect
+        image: controller:latest
+        name: manager
+        securityContext:
+          allowPrivilegeEscalation: false
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           limits:
             cpu: 100m
@@ -43,15 +50,4 @@ spec:
           requests:
             cpu: 100m
             memory: 20Mi
-        env:
-          - name: WATCH_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: OPERATOR_NAME
-            value: "scanning-operator"
       terminationGracePeriodSeconds: 10

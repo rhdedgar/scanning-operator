@@ -1,17 +1,21 @@
 domain: openshift.io
-layout: go.kubebuilder.io/v2
-projectName: scanning-operator
+layout: go.kubebuilder.io/v3
+projectName: zv13-scanning-operator
 repo: github.com/rhdedgar/scanning-operator
 resources:
-- group: managed
-  kind: Scanner
+- crdVersion: v1
+  group: managed
+  kind: LoggerService
   version: v1alpha1
-- group: managed
+- crdVersion: v1
+  group: managed
   kind: Logger
   version: v1alpha1
-- group: managed
-  kind: LoggerService
+- crdVersion: v1
+  group: managed
+  kind: Scanner
   version: v1alpha1
 version: 3-alpha
 plugins:
-  go.sdk.operatorframework.io/v2-alpha: {}
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
