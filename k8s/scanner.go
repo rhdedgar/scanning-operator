@@ -156,6 +156,61 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Name:      "clam-files",
 							MountPath: "/clam",
 						}},
+					}, {
+						Image: "quay.io/dedgar/watcher:v0.0.46",
+						Name:  "scheduler",
+						SecurityContext: &corev1.SecurityContext{
+							Privileged: &privileged,
+							RunAsUser:  &runAsUser,
+						},
+						Env: []corev1.EnvVar{{
+							Name:  "OO_PAUSE_ON_START",
+							Value: "false",
+						}, {
+							Name:  "CRIO_LOG_URL",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/crio/log",
+						}, {
+							Name:  "DOCKER_LOG_URL",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/docker/log",
+						}, {
+							Name:  "CLAM_LOG_URL",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/clam/scanresult",
+						}, {
+							Name:  "JOURNAL_PATH",
+							Value: "/var/log/journal",
+						}, {
+							Name:  "SCAN_RESULTS_DIR",
+							Value: "",
+						}, {
+							Name:  "POST_RESULT_URL",
+							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/clam/scanresult",
+						}, {
+							Name:  "OUT_FILE",
+							Value: "",
+						}, {
+							Name:  "CLAM_SOCKET",
+							Value: "/clam/clamd.sock",
+						}, {
+							Name:  "INFO_SOCKET",
+							Value: "@rpc.sock",
+						}, {
+							Name:  "SCHEDULED_SCAN",
+							Value: "true",
+						}, {
+							Name:  "SCHEDULED_SCAN_DAY",
+							Value: "Saturday",
+						}},
+						Resources: corev1.ResourceRequirements{},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "watcher-host-journal",
+							MountPath: "/var/log/journal",
+						}, {
+							Name:      "host-filesystem",
+							MountPath: "/host",
+						}, {
+							Name:      "clam-files",
+							MountPath: "/clam",
+						}},
 					}},
 					Volumes: []corev1.Volume{{
 						Name: "clam-secrets",

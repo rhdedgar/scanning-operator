@@ -106,5 +106,6 @@ func (r *LoggerServiceReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 func (r *LoggerServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&managedv1alpha1.LoggerService{}).
+		Owns(&managedv1alpha1.Scanner{}).
 		Complete(r)
 }
