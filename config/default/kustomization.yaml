@@ -1,12 +1,12 @@
 # Adds namespace to all resources.
-namespace: zv13-scanning-operator-system
+namespace: openshift-scanning-operator-system
 
 # Value of this field is prepended to the
 # names of all resources, e.g. a deployment named
 # "wordpress" becomes "alices-wordpress".
 # Note that it should also match with the prefix (text before '-') of the namespace
 # field above.
-namePrefix: zv13-scanning-operator-
+namePrefix: openshift-scanning-operator-
 
 # Labels to add to all resources and selectors.
 #commonLabels:

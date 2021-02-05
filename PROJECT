@@ -1,6 +1,6 @@
 domain: openshift.io
 layout: go.kubebuilder.io/v3
-projectName: zv13-scanning-operator
+projectName: openshift-scanning-operator
 repo: github.com/rhdedgar/scanning-operator
 resources:
 - crdVersion: v1
