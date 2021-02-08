@@ -86,7 +86,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
-						Image: "quay.io/dedgar/container-info:v0.0.5",
+						Image: "quay.io/dedgar/container-info:v0.0.7",
 						Name:  "info",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -108,7 +108,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/host",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.47",
+						Image: "quay.io/dedgar/watcher:v0.0.48",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -117,6 +117,9 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
+						}, {
+							Name:  "ACTIVE_SCAN",
+							Value: "true",
 						}, {
 							Name:  "CRIO_LOG_URL",
 							Value: "http://loggerservice.openshift-scanning-operator.svc.cluster.local:8080/api/crio/log",
@@ -157,7 +160,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.47",
+						Image: "quay.io/dedgar/watcher:v0.0.48",
 						Name:  "scheduler",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -199,6 +202,9 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						}, {
 							Name:  "SCHEDULED_SCAN_DAY",
 							Value: "Saturday",
+						}, {
+							Name:  "HOST_SCAN_DIRS",
+							Value: "/host",
 						}},
 						Resources: corev1.ResourceRequirements{},
 						VolumeMounts: []corev1.VolumeMount{{
