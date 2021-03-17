@@ -86,7 +86,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
-						Image: "quay.io/dedgar/container-info:v0.0.11",
+						Image: "quay.io/dedgar/container-info:v0.0.12",
 						Name:  "info",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
