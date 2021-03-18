@@ -86,7 +86,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/var/lib/clamav",
 						}},
 					}, {
-						Image: "quay.io/dedgar/container-info:v0.0.13",
+						Image: "quay.io/dedgar/container-info:v0.0.14",
 						Name:  "info",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -108,7 +108,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/host",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.61",
+						Image: "quay.io/dedgar/watcher:v0.0.62",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -160,7 +160,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.61",
+						Image: "quay.io/dedgar/watcher:v0.0.62",
 						Name:  "scheduler",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
