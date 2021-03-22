@@ -142,6 +142,12 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Name:  "OUT_FILE",
 							Value: "",
 						}, {
+							Name:  "SKIP_NAMESPACE_PREFIXES",
+							Value: "openshift-",
+						}, {
+							Name:  "SKIP_NAMESPACES",
+							Value: "openshift-scanning-operator-system",
+						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/clam/clamd.sock",
 						}, {
