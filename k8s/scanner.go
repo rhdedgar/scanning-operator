@@ -108,7 +108,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/host",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.66",
+						Image: "quay.io/dedgar/watcher:v0.0.67",
 						Name:  "watcher",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -146,7 +146,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Value: "openshift-",
 						}, {
 							Name:  "SKIP_NAMESPACES",
-							Value: "openshift-scanning-operator-system",
+							Value: "openshift-scanning-operator",
 						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/clam/clamd.sock",
@@ -166,7 +166,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image: "quay.io/dedgar/watcher:v0.0.66",
+						Image: "quay.io/dedgar/watcher:v0.0.67",
 						Name:  "scheduler",
 						SecurityContext: &corev1.SecurityContext{
 							Privileged: &privileged,
@@ -216,7 +216,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Value: "openshift-",
 						}, {
 							Name:  "SKIP_NAMESPACES",
-							Value: "openshift-scanning-operator-system",
+							Value: "openshift-scanning-operator",
 						}, {
 							Name:  "HOST_SCAN_DIRS",
 							Value: "/host",
