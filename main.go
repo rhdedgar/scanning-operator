@@ -48,8 +48,6 @@ func init() {
 	// +kubebuilder:scaffold:scheme
 }
 
-// +kubebuilder:rbac:groups="*",resources=*,verbs=*
-
 // TODO: trim down rbac controls to only those necessary.
 // Migrate parts to each controller as needed.
 func main() {
