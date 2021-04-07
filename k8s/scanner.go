@@ -4,6 +4,7 @@ import (
 	managedv1alpha1 "github.com/rhdedgar/scanning-operator/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,9 +41,18 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						},
 					},
 					InitContainers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:v0.0.4",
-						Name:      "init-clamsig-puller",
-						Resources: corev1.ResourceRequirements{},
+						Image: "quay.io/dedgar/clamsig-puller:v0.0.4",
+						Name:  "init-clamsig-puller",
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("50Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("200Mi"),
+							},
+						},
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
@@ -59,9 +69,18 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						}},
 					}},
 					Containers: []corev1.Container{{
-						Image:     "quay.io/dedgar/clamsig-puller:v0.0.4",
-						Name:      "clamsig-puller",
-						Resources: corev1.ResourceRequirements{},
+						Image: "quay.io/dedgar/clamsig-puller:v0.0.4",
+						Name:  "clamsig-puller",
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("50Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("200Mi"),
+							},
+						},
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
@@ -74,9 +93,18 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							MountPath: "/clam",
 						}},
 					}, {
-						Image:     "quay.io/dedgar/clamd:v0.0.3",
-						Name:      "clamd",
-						Resources: corev1.ResourceRequirements{},
+						Image: "quay.io/dedgar/clamd:v0.0.3",
+						Name:  "clamd",
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("600Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("300m"),
+								corev1.ResourceMemory: resource.MustParse("1Gi"),
+							},
+						},
 						Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
@@ -92,8 +120,16 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Privileged: &privileged,
 							RunAsUser:  &runAsUser,
 						},
-						Resources: corev1.ResourceRequirements{},
-						Env: []corev1.EnvVar{{
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("20Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("50Mi"),
+							},
+						}, Env: []corev1.EnvVar{{
 							Name:  "OO_PAUSE_ON_START",
 							Value: "false",
 						}, {
@@ -146,7 +182,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Value: "openshift-",
 						}, {
 							Name:  "SKIP_NAMESPACES",
-							Value: "openshift-scanning-operator",
+							Value: "openshift-scanning-operator,ci",
 						}, {
 							Name:  "CLAM_SOCKET",
 							Value: "/clam/clamd.sock",
@@ -154,7 +190,16 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Name:  "INFO_SOCKET",
 							Value: "@rpc.sock",
 						}},
-						Resources: corev1.ResourceRequirements{},
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("50Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("100Mi"),
+							},
+						},
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "watcher-host-journal",
 							MountPath: "/var/log/journal",
@@ -221,8 +266,16 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Name:  "HOST_SCAN_DIRS",
 							Value: "/host",
 						}},
-						Resources: corev1.ResourceRequirements{},
-						VolumeMounts: []corev1.VolumeMount{{
+						Resources: corev1.ResourceRequirements{
+							Requests: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("50Mi"),
+							},
+							Limits: corev1.ResourceList{
+								corev1.ResourceCPU:    resource.MustParse("100m"),
+								corev1.ResourceMemory: resource.MustParse("100Mi"),
+							},
+						}, VolumeMounts: []corev1.VolumeMount{{
 							Name:      "watcher-host-journal",
 							MountPath: "/var/log/journal",
 						}, {
