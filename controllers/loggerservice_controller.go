@@ -40,9 +40,10 @@ type LoggerServiceReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggerservices/finalizers,verbs=update
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggerservices/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggerservices/finalizers,verbs=update
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggerservices,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,namespace="openshift-scanning-operator",resources=services,verbs=get;list;
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -79,7 +80,7 @@ func (r *LoggerServiceReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return reconcile.Result{}, err
 	}
 
-	// Check if this DaemonSet already exists
+	// Check if this Service already exists
 	svcFound := &corev1.Service{}
 
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: service.Name, Namespace: service.Namespace}, svcFound)

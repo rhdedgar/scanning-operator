@@ -40,9 +40,18 @@ type LoggerReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggers/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=managed.openshift.io,resources=loggers/finalizers,verbs=update
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=managed.openshift.io,namespace="openshift-scanning-operator",resources=loggers/finalizers,verbs=update
+
+// +kubebuilder:rbac:groups=security.openshift.io,namespace="openshift-scanning-operator",resources=securitycontextconstraints,verbs=use
+// +kubebuilder:rbac:groups=security.openshift.io,namespace="openshift-scanning-operator",resources=securitycontextconstraints,verbs=get;create;update
+// +kubebuilder:rbac:groups=security.openshift.io,namespace="openshift-scanning-operator",resourceNames=privileged,resources=securitycontextconstraints,verbs=get;create;update
+
+// +kubebuilder:rbac:groups=core,namespace="openshift-scanning-operator",resources=pods,verbs=get;list;
+// +kubebuilder:rbac:groups=core,namespace="openshift-scanning-operator",resources=events,verbs=create;watch;list;patch
+// +kubebuilder:rbac:groups=core,namespace="openshift-scanning-operator",resources=secrets;services,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps,namespace="openshift-scanning-operator",resources=deployments;daemonsets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

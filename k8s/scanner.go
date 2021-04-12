@@ -98,11 +98,11 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						Resources: corev1.ResourceRequirements{
 							Requests: corev1.ResourceList{
 								corev1.ResourceCPU:    resource.MustParse("100m"),
-								corev1.ResourceMemory: resource.MustParse("600Mi"),
+								corev1.ResourceMemory: resource.MustParse("800Mi"),
 							},
 							Limits: corev1.ResourceList{
 								corev1.ResourceCPU:    resource.MustParse("300m"),
-								corev1.ResourceMemory: resource.MustParse("1Gi"),
+								corev1.ResourceMemory: resource.MustParse("2Gi"),
 							},
 						},
 						Env: []corev1.EnvVar{{

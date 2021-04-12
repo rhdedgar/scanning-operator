@@ -37,8 +37,9 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	scheme    = runtime.NewScheme()
+	setupLog  = ctrl.Log.WithName("setup")
+	namespace = "openshift-scanning-operator"
 )
 
 func init() {
@@ -48,8 +49,6 @@ func init() {
 	// +kubebuilder:scaffold:scheme
 }
 
-// TODO: trim down rbac controls to only those necessary.
-// Migrate parts to each controller as needed.
 func main() {
 	var metricsAddr string
 	var enableLeaderElection bool
@@ -74,6 +73,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "a9d9b96c.openshift.io",
+		Namespace:              namespace,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
