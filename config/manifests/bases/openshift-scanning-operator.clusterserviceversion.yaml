@@ -1,0 +1,62 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: openshift-scanning-operator.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Logger is the Schema for the loggers API
+      displayName: Logger
+      kind: Logger
+      name: loggers.managed.openshift.io
+      version: v1alpha1
+    - description: LoggerService is the Schema for the loggerservices API
+      displayName: Logger Service
+      kind: LoggerService
+      name: loggerservices.managed.openshift.io
+      version: v1alpha1
+    - description: Scanner is the Schema for the scanners API
+      displayName: Scanner
+      kind: Scanner
+      name: scanners.managed.openshift.io
+      version: v1alpha1
+  description: Malware scanning and pod creation logging for Kubernetes and OpenShift pods and nodes.
+  displayName: scanning-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - scanning
+  - security
+  - compliance
+  - malware-scanning
+  - scanning-operator
+  - pod-logger
+  links:
+  - name: Openshift Scanning Operator
+    url: https://openshift-scanning-operator.domain
+  maintainers:
+  - email: dedgar@redhat.com
+    name: Doug Edgar
+  maturity: alpha
+  provider:
+    name: scanning-operator
+  version: 0.0.0

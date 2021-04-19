@@ -1,0 +1,335 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "managed.openshift.io/v1alpha1",
+          "kind": "Logger",
+          "metadata": {
+            "name": "logger"
+          },
+          "spec": {
+            "foo": "bar"
+          }
+        },
+        {
+          "apiVersion": "managed.openshift.io/v1alpha1",
+          "kind": "LoggerService",
+          "metadata": {
+            "name": "loggerservice"
+          },
+          "spec": {
+            "foo": "bar"
+          }
+        },
+        {
+          "apiVersion": "managed.openshift.io/v1alpha1",
+          "kind": "Scanner",
+          "metadata": {
+            "name": "scanner"
+          },
+          "spec": {
+            "foo": "bar"
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.4.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+  name: openshift-scanning-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Logger is the Schema for the loggers API
+      displayName: Logger
+      kind: Logger
+      name: loggers.managed.openshift.io
+      version: v1alpha1
+    - description: LoggerService is the Schema for the loggerservices API
+      displayName: Logger Service
+      kind: LoggerService
+      name: loggerservices.managed.openshift.io
+      version: v1alpha1
+    - description: Scanner is the Schema for the scanners API
+      displayName: Scanner
+      kind: Scanner
+      name: scanners.managed.openshift.io
+      version: v1alpha1
+  description: Malware scanning and pod creation logging for Kubernetes and OpenShift pods and nodes.
+  displayName: scanning-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: default
+      deployments:
+      - name: openshift-scanning-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                command:
+                - /manager
+                image: quay.io/dedgar/scanning-operator:v0.0.76
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 30Mi
+                  requests:
+                    cpu: 100m
+                    memory: 20Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          - coordination.k8s.io
+          resources:
+          - configmaps
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        - apiGroups:
+          - apps
+          resources:
+          - daemonsets
+          - deployments
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+          - list
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          - services
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - services
+          verbs:
+          - get
+          - list
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggers/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggers/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggerservices
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggerservices/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - loggerservices/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - scanners
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - scanners/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - managed.openshift.io
+          resources:
+          - scanners/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - get
+          - update
+          - use
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - get
+          - update
+        serviceAccountName: default
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - scanning
+  - security
+  - compliance
+  - malware-scanning
+  - scanning-operator
+  - pod-logger
+  links:
+  - name: Openshift Scanning Operator
+    url: https://openshift-scanning-operator.domain
+  maintainers:
+  - email: dedgar@redhat.com
+    name: Doug Edgar
+  maturity: alpha
+  provider:
+    name: scanning-operator
+  version: 0.0.1
