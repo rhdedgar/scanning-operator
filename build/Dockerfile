@@ -1,0 +1,1 @@
+/home/remote/dedgar/go/src/github.com/rhdedgar/scanning-operator/Dockerfile
