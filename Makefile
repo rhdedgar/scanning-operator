@@ -1,3 +1,5 @@
+include boilerplate/generated-includes.mk
+
 # Current Operator version
 VERSION ?= 0.0.1
 # Default bundle image tag
