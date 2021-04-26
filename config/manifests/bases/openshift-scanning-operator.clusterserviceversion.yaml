@@ -4,8 +4,8 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: openshift-scanning-operator.v0.0.0
-  namespace: placeholder
+  name: openshift-scanning-operator.v0.0.76
+  namespace: openshift-scanning-operator
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -37,11 +37,11 @@ spec:
   installModes:
   - supported: false
     type: OwnNamespace
-  - supported: false
+  - supported: true
     type: SingleNamespace
   - supported: false
     type: MultiNamespace
-  - supported: true
+  - supported: false
     type: AllNamespaces
   keywords:
   - scanning
@@ -52,11 +52,11 @@ spec:
   - pod-logger
   links:
   - name: Openshift Scanning Operator
-    url: https://openshift-scanning-operator.domain
+    url: https://github.com/rhdedgar/scanning-operator
   maintainers:
   - email: dedgar@redhat.com
     name: Doug Edgar
-  maturity: alpha
+  maturity: beta
   provider:
     name: scanning-operator
-  version: 0.0.0
+  version: 0.0.76
