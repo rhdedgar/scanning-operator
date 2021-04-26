@@ -39,7 +39,7 @@ metadata:
     operators.operatorframework.io/builder: operator-sdk-v1.4.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
   name: openshift-scanning-operator.v0.0.76
-  namespace: placeholder
+  namespace: openshift-scanning-operator
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -310,11 +310,11 @@ spec:
   installModes:
   - supported: false
     type: OwnNamespace
-  - supported: false
+  - supported: true
     type: SingleNamespace
   - supported: false
     type: MultiNamespace
-  - supported: true
+  - supported: false
     type: AllNamespaces
   keywords:
   - scanning
@@ -325,11 +325,11 @@ spec:
   - pod-logger
   links:
   - name: Openshift Scanning Operator
-    url: https://openshift-scanning-operator.domain
+    url: https://github.com/rhdedgar/scanning-operator
   maintainers:
   - email: dedgar@redhat.com
     name: Doug Edgar
-  maturity: alpha
+  maturity: beta
   provider:
     name: scanning-operator
   version: 0.0.76
