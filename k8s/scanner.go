@@ -61,7 +61,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Value: "true",
 						}},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clam-secrets",
+							Name:      "scanner-secrets",
 							MountPath: "/secrets",
 						}, {
 							Name:      "clam-files",
@@ -86,7 +86,7 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 							Value: "false",
 						}},
 						VolumeMounts: []corev1.VolumeMount{{
-							Name:      "clam-secrets",
+							Name:      "scanner-secrets",
 							MountPath: "/secrets",
 						}, {
 							Name:      "clam-files",
@@ -287,10 +287,10 @@ func ScannerDaemonSet(m *managedv1alpha1.Scanner) *appsv1.DaemonSet {
 						}},
 					}},
 					Volumes: []corev1.Volume{{
-						Name: "clam-secrets",
+						Name: "scanner-secrets",
 						VolumeSource: corev1.VolumeSource{
 							Secret: &corev1.SecretVolumeSource{
-								SecretName: "clam-secrets",
+								SecretName: "scanner-secrets",
 							},
 						},
 					}, {
