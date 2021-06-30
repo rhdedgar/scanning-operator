@@ -73,13 +73,13 @@ vet:
 generate: controller-gen
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
-# Build the docker image
-docker-build: test
-	docker build --no-cache -t ${IMG} .
+# Build the container image
+podman-build: test
+	podman build --no-cache --tag ${IMG} .
 
-# Push the docker image
-docker-push:
-	docker push ${IMG}
+# Push the container image
+podman-push:
+	podman push ${IMG}
 
 # Download controller-gen locally if necessary
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
@@ -116,4 +116,4 @@ bundle: manifests kustomize
 # Build the bundle image.
 .PHONY: bundle-build
 bundle-build:
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	podman build -f bundle.podmanfile --tag $(BUNDLE_IMG) .
