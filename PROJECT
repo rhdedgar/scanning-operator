@@ -3,19 +3,37 @@ layout: go.kubebuilder.io/v3
 projectName: openshift-scanning-operator
 repo: github.com/rhdedgar/scanning-operator
 resources:
-- crdVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: openshift.io
   group: managed
   kind: LoggerService
+  # TODO(user): Update the package path for your API if the below value is incorrect.
+  path: github.com/rhdedgar/scanning-operator/api/v1alpha1
   version: v1alpha1
-- crdVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: openshift.io
   group: managed
   kind: Logger
+  # TODO(user): Update the package path for your API if the below value is incorrect.
+  path: github.com/rhdedgar/scanning-operator/api/v1alpha1
   version: v1alpha1
-- crdVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: openshift.io
   group: managed
   kind: Scanner
+  # TODO(user): Update the package path for your API if the below value is incorrect.
+  path: github.com/rhdedgar/scanning-operator/api/v1alpha1
   version: v1alpha1
-version: 3-alpha
+version: "3"
 plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}

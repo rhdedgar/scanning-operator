@@ -25,7 +25,8 @@ spec:
       kind: Scanner
       name: scanners.managed.openshift.io
       version: v1alpha1
-  description: Malware scanning and pod creation logging for Kubernetes and OpenShift pods and nodes.
+  description: Malware scanning and pod creation logging for Kubernetes and OpenShift
+    pods and nodes.
   displayName: scanning-operator
   icon:
   - base64data: ""
