@@ -1,7 +1,7 @@
 # Current Operator version
 VERSION ?= 0.0.76
 # Default bundle image tag
-BUNDLE_IMG ?= scanning-operator-bundle:$(VERSION)
+BUNDLE_IMG ?= quay.io/dedgar/scanning-operator-bundle:v$(VERSION)
 # Options for 'bundle-build'
 ifneq ($(origin CHANNELS), undefined)
 BUNDLE_CHANNELS := --channels=$(CHANNELS)
@@ -12,7 +12,7 @@ endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
 # Image URL to use all building/pushing image targets
-IMG ?= quay.io/dedgar/scanning-operator:v0.0.76
+IMG ?= quay.io/dedgar/scanning-operator:v$(VERSION)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 
@@ -116,4 +116,4 @@ bundle: manifests kustomize
 # Build the bundle image.
 .PHONY: bundle-build
 bundle-build:
-	podman build -f bundle.Containerfile --tag $(BUNDLE_IMG) .
+	podman build --no-cache -f bundle.Containerfile --tag $(BUNDLE_IMG) .
